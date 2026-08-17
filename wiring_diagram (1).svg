@@ -1,0 +1,219 @@
+<svg viewBox="0 0 1300 1150" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
+  <rect x="0" y="0" width="1300" height="1150" fill="#fafafa"/>
+  <text x="650" y="36" text-anchor="middle" font-size="26" font-weight="bold" fill="#1a1a1a">ESP32 Temperature-Controlled Fan — Full Wiring Diagram</text>
+  <text x="650" y="58" text-anchor="middle" font-size="13" fill="#555">Follow wire numbers 1-11 in order. Every wire's start and end pin is labeled.</text>
+
+  <!-- ================= LEGEND ================= -->
+  <g>
+    <rect x="30" y="76" width="1240" height="34" rx="6" fill="#fff" stroke="#ccc"/>
+    <text x="45" y="98" font-size="12" fill="#333" font-weight="bold">Wire colors:</text>
+    <line x1="130" y1="93" x2="160" y2="93" stroke="#e53935" stroke-width="3"/><text x="165" y="98" font-size="11">Power (3.3V / 12V)</text>
+    <line x1="300" y1="93" x2="330" y2="93" stroke="#222" stroke-width="3"/><text x="335" y="98" font-size="11">Ground</text>
+    <line x1="420" y1="93" x2="450" y2="93" stroke="#fb8c00" stroke-width="3"/><text x="455" y="98" font-size="11">Sensor data (GPIO4)</text>
+    <line x1="620" y1="93" x2="650" y2="93" stroke="#1e88e5" stroke-width="3"/><text x="655" y="98" font-size="11">PWM gate signal (GPIO18)</text>
+    <line x1="860" y1="93" x2="890" y2="93" stroke="#8e24aa" stroke-width="3"/><text x="895" y="98" font-size="11">Fan switched leg (through MOSFET)</text>
+  </g>
+
+  <!-- ================= ESP32 BOARD ================= -->
+  <g>
+    <rect x="60" y="150" width="230" height="560" rx="12" fill="#0b3d2e" stroke="#000" stroke-width="2"/>
+    <rect x="150" y="140" width="60" height="24" fill="#888" stroke="#333"/>
+    <text x="180" y="157" text-anchor="middle" font-size="10" fill="#fff">USB</text>
+    <text x="175" y="190" text-anchor="middle" font-size="16" fill="#fff" font-weight="bold">ESP32</text>
+    <text x="175" y="207" text-anchor="middle" font-size="11" fill="#bcd">DevKit v1 (30-pin)</text>
+    <rect x="120" y="230" width="110" height="70" rx="4" fill="#222" stroke="#555"/>
+    <text x="175" y="270" text-anchor="middle" font-size="10" fill="#8f8">ESP32-WROOM-32</text>
+
+    <!-- left header pins -->
+    <circle cx="60" cy="340" r="6" fill="#e53935"/>
+    <text x="75" y="345" font-size="13" fill="#fff" font-weight="bold">3V3</text>
+    <text x="75" y="358" font-size="10" fill="#adf">(pin near USB, left side)</text>
+
+    <circle cx="60" cy="420" r="6" fill="#fb8c00"/>
+    <text x="75" y="425" font-size="13" fill="#fff" font-weight="bold">GPIO4</text>
+    <text x="75" y="438" font-size="10" fill="#adf">(left header, 5th pin down)</text>
+
+    <circle cx="60" cy="500" r="6" fill="#1e88e5"/>
+    <text x="75" y="505" font-size="13" fill="#fff" font-weight="bold">GPIO18</text>
+    <text x="75" y="518" font-size="10" fill="#adf">(left header, lower half)</text>
+
+    <circle cx="60" cy="660" r="6" fill="#bbbbbb"/>
+    <text x="75" y="665" font-size="13" fill="#fff" font-weight="bold">GND</text>
+    <text x="75" y="678" font-size="10" fill="#adf">(bottom-left corner pin)</text>
+
+    <text x="175" y="700" text-anchor="middle" font-size="10" fill="#9c9">Right-side header pins unused — not shown</text>
+  </g>
+
+  <!-- ================= DS18B20 ================= -->
+  <g>
+    <rect x="420" y="150" width="220" height="150" rx="10" fill="#37474f" stroke="#000" stroke-width="2"/>
+    <text x="530" y="175" text-anchor="middle" font-size="15" fill="#fff" font-weight="bold">DS18B20</text>
+    <text x="530" y="192" text-anchor="middle" font-size="11" fill="#ccc">Waterproof probe, stainless tip</text>
+    <!-- probe icon -->
+    <rect x="500" y="205" width="60" height="16" rx="8" fill="#bbb" stroke="#666"/>
+    <line x1="440" y1="213" x2="500" y2="213" stroke="#999" stroke-width="4"/>
+    <!-- 3 wires coming out -->
+    <circle cx="440" cy="240" r="6" fill="#e53935"/>
+    <text x="455" y="245" font-size="12" fill="#fff">Red wire = VCC</text>
+    <circle cx="440" cy="262" r="6" fill="#fb8c00"/>
+    <text x="455" y="267" font-size="12" fill="#fff">Yellow wire = DATA</text>
+    <circle cx="440" cy="284" r="6" fill="#bbbbbb"/>
+    <text x="455" y="289" font-size="12" fill="#fff">Black wire = GND</text>
+  </g>
+
+  <!-- 4.7k pull-up resistor, drawn as zigzag between DATA and VCC -->
+  <g>
+    <text x="700" y="215" font-size="12" fill="#333" font-weight="bold">R1 = 4.7 kΩ pull-up</text>
+    <text x="700" y="230" font-size="10" fill="#666">(yellow-violet-red bands)</text>
+    <path d="M700,240 h10 l6,-10 l12,20 l12,-20 l12,20 l12,-20 l6,10 h10" fill="none" stroke="#333" stroke-width="2"/>
+  </g>
+  <!-- route: VCC(3.3V) rail across top to DS18B20 VCC AND to top of R1; DATA node connects DS18B20 data, R1 bottom, and GPIO4 -->
+  <path d="M440,240 L360,240 L360,120 L780,120 L780,240" fill="none" stroke="#e53935" stroke-width="2.5"/>
+  <text x="500" y="112" font-size="11" fill="#e53935" font-weight="bold">① 3V3 rail — DS18B20 VCC + resistor top</text>
+  <path d="M60,340 L340,340 L340,120" fill="none" stroke="#e53935" stroke-width="2.5" stroke-dasharray="0"/>
+
+  <path d="M440,262 L680,262 L680,270" fill="none" stroke="#fb8c00" stroke-width="2.5"/>
+  <path d="M792,270 L792,262 L780,262" fill="none" stroke="#fb8c00" stroke-width="2.5"/>
+  <path d="M680,262 L60,262 L60,420" fill="none" stroke="#fb8c00" stroke-width="2.5"/>
+  <text x="500" y="255" font-size="11" fill="#fb8c00" font-weight="bold">② DATA node — DS18B20 → R1 → GPIO4</text>
+
+  <!-- ================= MOSFET IRLZ44N ================= -->
+  <g>
+    <rect x="420" y="420" width="220" height="180" rx="10" fill="#455a64" stroke="#000" stroke-width="2"/>
+    <text x="530" y="445" text-anchor="middle" font-size="15" fill="#fff" font-weight="bold">IRLZ44N</text>
+    <text x="530" y="462" text-anchor="middle" font-size="11" fill="#ccc">Logic-level N-channel MOSFET (TO-220)</text>
+
+    <!-- TO-220 body -->
+    <rect x="480" y="475" width="100" height="70" rx="4" fill="#111" stroke="#555"/>
+    <circle cx="530" cy="485" r="4" fill="#666"/>
+    <line x1="495" y1="545" x2="495" y2="575" stroke="#ccc" stroke-width="3"/>
+    <line x1="530" y1="545" x2="530" y2="575" stroke="#ccc" stroke-width="3"/>
+    <line x1="565" y1="545" x2="565" y2="575" stroke="#ccc" stroke-width="3"/>
+    <circle cx="495" cy="575" r="6" fill="#1e88e5"/>
+    <circle cx="530" cy="575" r="6" fill="#8e24aa"/>
+    <circle cx="565" cy="575" r="6" fill="#bbbbbb"/>
+    <text x="495" y="595" text-anchor="middle" font-size="11" fill="#fff" font-weight="bold">G</text>
+    <text x="530" y="595" text-anchor="middle" font-size="11" fill="#fff" font-weight="bold">D</text>
+    <text x="565" y="595" text-anchor="middle" font-size="11" fill="#fff" font-weight="bold">S</text>
+  </g>
+
+  <!-- MOSFET pinout inset (zoomed detail, the #1 mistake area) -->
+  <g>
+    <rect x="700" y="410" width="260" height="190" rx="10" fill="#fff" stroke="#e53935" stroke-width="2"/>
+    <text x="830" y="432" text-anchor="middle" font-size="13" font-weight="bold" fill="#e53935">PINOUT DETAIL — check before wiring!</text>
+    <text x="830" y="450" text-anchor="middle" font-size="11" fill="#333">Hold with metal tab facing you, legs down:</text>
+    <rect x="790" y="460" width="80" height="60" rx="4" fill="#222"/>
+    <rect x="800" y="465" width="60" height="45" rx="2" fill="#666"/>
+    <circle cx="830" cy="487" r="3" fill="#999"/>
+    <line x1="800" y1="520" x2="800" y2="555" stroke="#999" stroke-width="3"/>
+    <line x1="830" y1="520" x2="830" y2="555" stroke="#999" stroke-width="3"/>
+    <line x1="860" y1="520" x2="860" y2="555" stroke="#999" stroke-width="3"/>
+    <text x="800" y="570" text-anchor="middle" font-size="12" font-weight="bold" fill="#333">G</text>
+    <text x="830" y="570" text-anchor="middle" font-size="12" font-weight="bold" fill="#333">D</text>
+    <text x="860" y="570" text-anchor="middle" font-size="12" font-weight="bold" fill="#333">S</text>
+    <text x="920" y="475" font-size="10" fill="#333">Left = Gate</text>
+    <text x="920" y="495" font-size="10" fill="#333">Middle = Drain</text>
+    <text x="920" y="515" font-size="10" fill="#333">Right = Source</text>
+    <text x="830" y="592" text-anchor="middle" font-size="10" fill="#900">Mixing up Drain/Source will not work — double check.</text>
+  </g>
+
+  <!-- Gate resistor 220R and pulldown 10k -->
+  <text x="700" y="640" font-size="12" fill="#333" font-weight="bold">R2 = 220 Ω series resistor (gate protection)</text>
+  <text x="700" y="655" font-size="10" fill="#666">(red-red-brown bands)</text>
+  <path d="M700,665 h10 l6,-10 l12,20 l12,-20 l12,20 l12,-20 l6,10 h10" fill="none" stroke="#333" stroke-width="2"/>
+
+  <text x="700" y="705" font-size="12" fill="#333" font-weight="bold">R3 = 10 kΩ pull-down (gate → GND)</text>
+  <text x="700" y="720" font-size="10" fill="#666">(brown-black-orange bands)</text>
+  <path d="M700,730 h10 l6,-10 l12,20 l12,-20 l12,20 l12,-20 l6,10 h10" fill="none" stroke="#333" stroke-width="2"/>
+
+  <!-- Wire ③: GPIO18 -> R2 -> Gate -->
+  <path d="M60,500 L360,500 L360,675 L700,675" fill="none" stroke="#1e88e5" stroke-width="2.5"/>
+  <path d="M792,675 L792,675" fill="none" stroke="#1e88e5" stroke-width="2.5"/>
+  <path d="M792,675 L495,675 L495,575" fill="none" stroke="#1e88e5" stroke-width="2.5"/>
+  <text x="420" y="668" font-size="11" fill="#1e88e5" font-weight="bold">③ GPIO18 → R2 → Gate</text>
+
+  <!-- Wire ④: Gate -> R3 -> GND rail -->
+  <path d="M495,590 L495,610 L700,610 L700,730" fill="none" stroke="#222" stroke-width="2" stroke-dasharray="5,3"/>
+  <path d="M792,730 L950,730 L950,900" fill="none" stroke="#222" stroke-width="2" stroke-dasharray="5,3"/>
+  <text x="600" y="605" font-size="11" fill="#333" font-weight="bold">④ Gate → R3 → common GND (keeps MOSFET off at boot)</text>
+
+  <!-- Wire ⑤: Source -> common GND -->
+  <path d="M565,590 L565,900" fill="none" stroke="#222" stroke-width="2.5"/>
+  <text x="575" y="700" font-size="11" fill="#333" font-weight="bold" transform="rotate(90 575,700)">⑤ Source → common GND</text>
+
+  <!-- ================= FAN ================= -->
+  <g>
+    <rect x="1000" y="150" width="230" height="170" rx="10" fill="#5d4037" stroke="#000" stroke-width="2"/>
+    <text x="1115" y="175" text-anchor="middle" font-size="15" fill="#fff" font-weight="bold">12V DC Fan</text>
+    <text x="1115" y="191" text-anchor="middle" font-size="11" fill="#ccc">2-wire type</text>
+    <circle cx="1060" cy="240" r="28" fill="none" stroke="#fff" stroke-width="2"/>
+    <path d="M1060,214 A26,26 0 0,1 1084,240" stroke="#fff" fill="none" stroke-width="2"/>
+    <path d="M1060,266 A26,26 0 0,1 1036,240" stroke="#fff" fill="none" stroke-width="2"/>
+    <path d="M1060,214 A26,26 0 0,0 1036,240" stroke="#fff" fill="none" stroke-width="2"/>
+    <circle cx="1200" cy="220" r="6" fill="#e53935"/>
+    <text x="1130" y="225" font-size="12" fill="#fff">Fan (+) wire</text>
+    <circle cx="1200" cy="270" r="6" fill="#8e24aa"/>
+    <text x="1130" y="275" font-size="12" fill="#fff">Fan (-) wire</text>
+  </g>
+
+  <!-- Diode across fan leads: MBR3045PT dual Schottky, TO-220AB, common cathode -->
+  <g>
+    <text x="1115" y="335" text-anchor="middle" font-size="12" fill="#333" font-weight="bold">D1 = MBR3045PT Schottky diode (TO-220AB)</text>
+    <text x="1115" y="350" text-anchor="middle" font-size="10" fill="#666">dual diode package, common cathode — only one leg used</text>
+    <rect x="1080" y="358" width="70" height="42" rx="4" fill="#111" stroke="#555"/>
+    <circle cx="1115" cy="367" r="3" fill="#666"/>
+    <line x1="1090" y1="400" x2="1090" y2="422" stroke="#ccc" stroke-width="3"/>
+    <line x1="1115" y1="400" x2="1115" y2="422" stroke="#ccc" stroke-width="3"/>
+    <line x1="1140" y1="400" x2="1140" y2="422" stroke="#ccc" stroke-width="3"/>
+    <circle cx="1090" cy="422" r="5" fill="#999"/>
+    <circle cx="1115" cy="422" r="5" fill="#e53935"/>
+    <circle cx="1140" cy="422" r="5" fill="#999"/>
+    <text x="1090" y="440" text-anchor="middle" font-size="10" fill="#333" font-weight="bold">A1</text>
+    <text x="1115" y="440" text-anchor="middle" font-size="10" fill="#333" font-weight="bold">K</text>
+    <text x="1140" y="440" text-anchor="middle" font-size="9" fill="#333" font-weight="bold">A2*</text>
+    <text x="1115" y="454" text-anchor="middle" font-size="9" fill="#900">K (center) → +12V. One outer Anode → Fan(−). *A2 left disconnected.</text>
+  </g>
+  <path d="M1200,220 L1220,220 L1220,367 L1115,367 L1115,400" fill="none" stroke="#e53935" stroke-width="2"/>
+  <path d="M1090,422 L1090,440 L1010,440 L1010,270 L1200,270" fill="none" stroke="#8e24aa" stroke-width="2"/>
+
+  <!-- ================= 12V SUPPLY ================= -->
+  <g>
+    <rect x="1000" y="470" width="230" height="120" rx="10" fill="#4e342e" stroke="#000" stroke-width="2"/>
+    <text x="1115" y="495" text-anchor="middle" font-size="14" fill="#fff" font-weight="bold">12V DC Power Supply</text>
+    <text x="1115" y="511" text-anchor="middle" font-size="10" fill="#ccc">rated above fan's current draw</text>
+    <rect x="1030" y="525" width="30" height="30" fill="#333" stroke="#999"/>
+    <text x="1045" y="545" text-anchor="middle" font-size="12" fill="#e53935" font-weight="bold">+</text>
+    <rect x="1170" y="525" width="30" height="30" fill="#333" stroke="#999"/>
+    <text x="1185" y="545" text-anchor="middle" font-size="12" fill="#fff" font-weight="bold">−</text>
+  </g>
+
+  <!-- Wire ⑥: 12V+ -> Fan(+) -->
+  <path d="M1045,525 L1045,220 L1200,220" fill="none" stroke="#e53935" stroke-width="2.5"/>
+  <text x="960" y="360" font-size="11" fill="#e53935" font-weight="bold" transform="rotate(-90 960,360)">⑥ 12V(+) → Fan(+)</text>
+
+  <!-- Wire ⑦: Fan(-) -> MOSFET Drain -->
+  <path d="M1200,270 L1250,270 L1250,720 L565,720 L565,590" fill="none" stroke="#8e24aa" stroke-width="2.5"/>
+  <text x="1000" y="712" font-size="11" fill="#8e24aa" font-weight="bold">⑦ Fan(−) → MOSFET Drain (this leg is PWM-switched, not the source)</text>
+
+  <!-- Wire ⑧: 12V GND -> common ground -->
+  <path d="M1185,555 L1185,900 L950,900" fill="none" stroke="#222" stroke-width="2.5"/>
+  <text x="1050" y="895" font-size="11" fill="#222" font-weight="bold">⑧ 12V(−) → common GND</text>
+
+  <!-- Wire ⑨: ESP32 GND -> common ground -->
+  <path d="M60,660 L60,900 L950,900" fill="none" stroke="#222" stroke-width="2.5"/>
+  <text x="150" y="895" font-size="11" fill="#222" font-weight="bold">⑨ ESP32 GND → common GND</text>
+
+  <!-- ================= COMMON GROUND CALLOUT ================= -->
+  <g>
+    <rect x="30" y="940" width="1240" height="90" rx="10" fill="#ffebee" stroke="#e53935" stroke-width="2"/>
+    <text x="650" y="968" text-anchor="middle" font-size="15" font-weight="bold" fill="#c62828">⑩ ⑪ CRITICAL: Common Ground</text>
+    <text x="650" y="990" text-anchor="middle" font-size="12" fill="#333">ESP32 GND, 12V supply (−), and MOSFET Source must all meet at ONE shared ground point.</text>
+    <text x="650" y="1008" text-anchor="middle" font-size="12" fill="#333">If any one of these three is missing, the fan will either never turn on or run uncontrolled at full speed.</text>
+  </g>
+
+  <!-- ================= NOTES ================= -->
+  <text x="30" y="1060" font-size="12" fill="#333" font-weight="bold">Build order:</text>
+  <text x="30" y="1080" font-size="11" fill="#333">1) Wire DS18B20 + R1 (steps ①②)  →  2) Wire MOSFET gate + R2 + R3 (steps ③④)  →  3) Wire MOSFET source to ground (step ⑤)</text>
+  <text x="30" y="1098" font-size="11" fill="#333">4) Wire fan + diode + 12V supply (steps ⑥⑦)  →  5) Tie all grounds together LAST (steps ⑧⑨⑩⑪), then power on and check Serial Monitor.</text>
+  <text x="30" y="1120" font-size="11" fill="#666">Full part specs: COMPONENT_SPECS.md | Step-by-step text instructions: README.md | Firmware: fan_control.ino</text>
+</svg>

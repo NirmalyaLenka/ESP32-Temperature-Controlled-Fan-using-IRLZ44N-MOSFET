@@ -126,6 +126,26 @@ Change these two values and re-upload to adjust the operating range.
 
 ---
 
+## Skills & technologies
+
+`Arduino/C++`
+
+
+## Repository structure
+
+Key files and folders (not exhaustive):
+
+- `COMPONENT_SPECS.md`
+- `README.md`
+- `fan_control.ino`
+- `wiring_diagram (1).svg`
+
+
+## How it works
+
+The main firmware sketch is `fan_control.ino`. Open it in Arduino IDE, verify the board, pin mapping and library requirements, then compile and upload. Test hardware behaviour on the real circuit before relying on it.
+
+
 ## Maintenance & Audit
 
 - **Audit date:** 10 November 2026

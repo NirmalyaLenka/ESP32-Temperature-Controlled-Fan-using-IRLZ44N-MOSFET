@@ -12,7 +12,7 @@ Files in this project:
 | `fan_control.ino`      | Firmware to upload to the ESP32                |
 | `README.md`            | This file — build and setup instructions       |
 | `COMPONENT_SPECS.md`   | Electrical specs for every part used            |
-| `wiring_diagram.svg`   | Full connection diagram (open in a browser or image viewer) |
+| [`wiring_diagram (1).svg`](wiring_diagram%20(1).svg) | Full connection diagram (open in a browser or image viewer) |
  
 ---
  
@@ -43,7 +43,10 @@ The fan needs 12V and more current than the ESP32 can safely supply, so the ESP3
 4. The ESP32 sends a PWM signal to the MOSFET's **Gate**. When the gate is "high," the MOSFET connects the fan's ground path and current flows. When it switches rapidly on/off (PWM), the fan effectively sees a lower average voltage, so it spins slower.
 5. The DS18B20 sensor reads temperature and reports it to the ESP32 over a single data wire (OneWire protocol).
 6. The ESP32 reads the temperature every second and adjusts the PWM duty cycle sent to the MOSFET gate accordingly.
-Open `wiring_diagram.svg` in any web browser for the full visual diagram with every wire and pin labeled.
+Open [`wiring_diagram (1).svg`](wiring_diagram%20(1).svg) in a web browser for the visual wiring diagram.
+
+
+> **MOSFET gate-drive caution:** The ESP32 GPIO drives the IRLZ44N gate at 3.3 V. A MOSFET's gate-threshold voltage is measured at a very small drain current; it does not prove that the device will have low on-resistance at 3.3 V. Check the exact manufacturer's datasheet and the fan current/temperature before relying on this combination. If the required on-resistance is not specified at the available gate voltage, use a suitable MOSFET with guaranteed low-voltage gate-drive specifications or a gate driver. Do not touch the MOSFET while powered if its temperature has not been checked safely.
  
 ---
  
@@ -90,6 +93,11 @@ Confirm with a multimeter (continuity mode) that ESP32 GND, MOSFET Source, and 1
 8. Open **Tools > Serial Monitor** at **115200 baud** to watch live temperature and fan speed readings.
 ---
  
+
+### Arduino-ESP32 core compatibility
+
+The checked-in sketch uses the legacy LEDC calls `ledcSetup()` and `ledcAttachPin()`, which belong to the Arduino-ESP32 2.x API. Arduino-ESP32 3.x changed the LEDC API, so this unchanged sketch may not compile against 3.x without a source port. For this documentation-only maintenance pass, the firmware was not changed or compiled; select a compatible core or port the sketch separately before upgrading.
+
 ## 5. Testing
  
 1. With everything wired and powered, open the Serial Monitor.

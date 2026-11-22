@@ -29,14 +29,13 @@ Bill of materials and key electrical specs for the ESP32 temperature-controlled 
 | Type                              | N-channel, logic-level gate     |
 | Drain-source voltage, V(DS)       | 55 V max                        |
 | Continuous drain current, I(D)    | 47 A (at 25°C, derate with heat)|
-| Gate threshold voltage, V(GS,th)  | 1.0 V - 2.0 V (fully logic-level, switches reliably from 3.3 V) |
+| Gate threshold voltage, V(GS,th)  | Check the exact manufacturer's datasheet; threshold voltage is not a full-on guarantee |
 | R(DS,on) at V(GS) = 5V            | ~0.022 Ω (typ.)                 |
 | R(DS,on) at V(GS) = 4V            | ~0.028 Ω (typ.)                 |
 | Package                           | TO-220                          |
 | Pinout (facing flat side, pins down) | Gate — Drain — Source (left to right) |
 
-**Why this MOSFET works directly with ESP32 (3.3 V logic):**
-IRLZ44N is a *logic-level* MOSFET, meaning it fully turns on with a 3.3 V-5 V gate signal. A standard (non-logic-level) MOSFET like an IRF540 would not fully saturate at 3.3 V and would overheat — do not substitute without checking V(GS,th).
+**Gate-drive compatibility caution:** The ESP32 sketch drives the gate with a 3.3 V GPIO signal. A MOSFET's gate-threshold voltage is measured at a small drain current; it does not prove that the device will have sufficiently low on-resistance at 3.3 V. Check the exact manufacturer's datasheet for guaranteed R(DS,on) at the available gate voltage and confirm the device's thermal performance at the fan's actual current. If the datasheet does not guarantee suitable performance at 3.3 V, use a MOSFET specified for low-voltage gate drive or add a suitable gate driver. Do not select a replacement based on threshold voltage alone.
 
 **Role in circuit:** Low-side switch. The fan's negative terminal connects to the MOSFET drain; the MOSFET source goes to ground. The ESP32 PWM signal drives the gate, chopping the fan's ground connection on and off to control average power delivered (and therefore speed).
 

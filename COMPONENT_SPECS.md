@@ -30,8 +30,7 @@ Bill of materials and key electrical specs for the ESP32 temperature-controlled 
 | Drain-source voltage, V(DS)       | 55 V max                        |
 | Continuous drain current, I(D)    | 47 A (at 25°C, derate with heat)|
 | Gate threshold voltage, V(GS,th)  | Check the exact manufacturer's datasheet; threshold voltage is not a full-on guarantee |
-| R(DS,on) at V(GS) = 5V            | ~0.022 Ω (typ.)                 |
-| R(DS,on) at V(GS) = 4V            | ~0.028 Ω (typ.)                 |
+| On-resistance at the available gate voltage | Verify guaranteed R(DS,on) and its test voltage in the exact manufacturer's datasheet |
 | Package                           | TO-220                          |
 | Pinout (facing flat side, pins down) | Gate — Drain — Source (left to right) |
 
